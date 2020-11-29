@@ -9,6 +9,16 @@ EZUSBのロード～GBAへのfwlib転送までをカバーしたライブラリ�
 
 Windows x64で動作確認しています。Linuxでも使えるはずですが動作確認はしていません。
 
+ULAはいくつか種類があるようですが、AN2131を使ったオリジナルのULAがターゲットです。
+
 + ULAについてはこちら
 	+ http://www2.teamknox.com/teamknox_old/ula/ula.html
 	+ http://optimize.ath.cx/bootcable/index.html
+	
+# ドライバのインストール方法
+1. ULAを接続します
+1. [Zadig](https://zadig.akeo.ie/)を使ってULAにWinUSBドライバを当てます。
+	+ Editでデバイス名を決められるので「USB Linker Advance(AN2131)」などとつけておきます。
+1. このテストプログラムを使用するなどしてAN2131へファームを転送します
+1. [Zadig](https://zadig.akeo.ie/)を使ってULAファーム用のデバイスにWinUSBドライバを当てます。
+	+ Editでデバイス名を決められるので「USB Linker Advance (Online)(AN2131)」などとつけておきます。
