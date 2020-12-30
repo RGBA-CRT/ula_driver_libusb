@@ -4,14 +4,14 @@ USB Linker Advance’s libusb implementation for AN2131
 ULA(USB Linker Advance)は2000年代初頭に開発された、GBAのmultiboot機能を使ってPCとGBAを接続するシステムです。
 古いシステムということもあり、USB～GBAの通信に使用されているAN2131のezusbドライバがx64 Windowsでは動作しません。
 
-このソフトウェアはezusbをlibusbに置き換えることで現代の環境でも動作できることを確認するためのテストプログラムです。
+このソフトウェアはezusbをlibusbに置き換えることで現代の環境でも動作できることを確認するための**非公式の**テストプログラムです。
 EZUSBのロード～GBAへのfwlib転送までをカバーしたライブラリとして設計されています。
 
 Windows x64で動作確認しています。Linuxでも使えるはずですが動作確認はしていません。
 
 ULAはいくつか種類があるようですが、AN2131を使ったオリジナルのULAがターゲットです。
 
-+ ULAについてはこちら
++ ULAについて参考にさせていただいたページ
 	+ http://www2.teamknox.com/teamknox_old/ula/ula.html
 	+ http://optimize.ath.cx/bootcable/index.html
 	
