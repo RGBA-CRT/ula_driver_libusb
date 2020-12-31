@@ -16,8 +16,9 @@ ULAはいくつか種類があるようですが、AN2131を使ったオリジ�
 	+ http://optimize.ath.cx/bootcable/index.html
 	
 + このライブラリを使用しているもの
+	+ https://github.com/RGBA-CRT/ULAHostV2_with_ula_driver
 	+ https://github.com/RGBA-CRT/GBA-Memviewer-ULA	
-	
+
 # ドライバのインストール方法
 1. ULAを接続します
 1. [Zadig](https://zadig.akeo.ie/)を使ってULAにWinUSBドライバを当てます。
