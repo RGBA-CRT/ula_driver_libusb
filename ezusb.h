@@ -1,7 +1,7 @@
 #ifndef _EZUSB_H
 #define _EZUSB_H
 
-#include "libusb.h"
+#include <libusb-1.0/libusb.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>

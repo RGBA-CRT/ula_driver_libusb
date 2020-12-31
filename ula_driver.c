@@ -1,4 +1,4 @@
-#include "ula_driver.h"
+#include "ula_driver_internal.h"
 #include "ezusb.h"
 
 #define CHECK_ERR_VOID(cause, status)                                          \
@@ -25,7 +25,7 @@ bool check_libusb_init() {
   return true;
 }
 
-bool ULA_CALLTYPE ula_open(ula_handle_t *device, uint16_t vid, uint16_t pid) {
+DllPublic bool ULA_CALLTYPE ula_open(ula_handle_t *device, uint16_t vid, uint16_t pid) {
   if (!check_libusb_init())
     return false;
 
@@ -37,20 +37,20 @@ bool ULA_CALLTYPE ula_open(ula_handle_t *device, uint16_t vid, uint16_t pid) {
   return (ezusb_open(&((*device)->libusb_handle), vid, pid) < 0) ? false : true;
 }
 
-bool ULA_CALLTYPE ula_close(ula_handle_t device) {
+DllPublic bool ULA_CALLTYPE ula_close(ula_handle_t device) {
   ezusb_close(device->libusb_handle);
   free(device);
   return true;
 }
 
-bool ULA_CALLTYPE ula_set_endpoint(ula_handle_t device, uint8_t bluk_in,
+DllPublic bool ULA_CALLTYPE ula_set_endpoint(ula_handle_t device, uint8_t bluk_in,
                                    uint8_t bluk_out) {
   device->bluk_in_endpoint = bluk_in;
   device->bluk_out_endpoint = bluk_out;
   return true;
 }
 
-bool ULA_CALLTYPE ula_ezusb_firmware_download(uint16_t vid, uint16_t pid,
+DllPublic bool ULA_CALLTYPE ula_ezusb_firmware_download(uint16_t vid, uint16_t pid,
                                               uint8_t *fw, size_t len) {
   if (!check_libusb_init())
     return false;
@@ -60,7 +60,7 @@ bool ULA_CALLTYPE ula_ezusb_firmware_download(uint16_t vid, uint16_t pid,
   return ret;
 }
 
-bool ULA_CALLTYPE ula_send_command(ula_handle_t device, uint8_t command,
+DllPublic bool ULA_CALLTYPE ula_send_command(ula_handle_t device, uint8_t command,
                                    uint32_t param1, uint32_t param2,
                                    uint32_t param3) {
   uint8_t cmdbuf[13];
@@ -94,13 +94,13 @@ bool ULA_CALLTYPE ula_send_command(ula_handle_t device, uint8_t command,
   return true;
 }
 
-bool ULA_CALLTYPE ula_gba_init(ula_handle_t device) {
+DllPublic bool ULA_CALLTYPE ula_gba_init(ula_handle_t device) {
   bool ret = ula_send_command(device, ULA_EZFW_TARGET_INIT, 0, 0, 0);
   ula_sleep_ms(ULA_CMD_WAIT_MS);
   return ret;
 }
 
-bool ULA_CALLTYPE ula_gba_firmware_download(ula_handle_t device,
+DllPublic bool ULA_CALLTYPE ula_gba_firmware_download(ula_handle_t device,
                                             uint8_t *gba_fw, size_t len) {
   if (!ula_send_command(device, ULA_EZFW_TARGET_DOWNLOAD, 0x02010000, len, 0)) {
     printf("ULA_EZFW_TARGET_DOWNLOAD failed\n");
@@ -122,7 +122,7 @@ bool ULA_CALLTYPE ula_gba_firmware_download(ula_handle_t device,
   return true;
 }
 
-void ULA_CALLTYPE ula_sleep_ms(uint32_t ms) {
+DllPublic void ULA_CALLTYPE ula_sleep_ms(uint32_t ms) {
 #ifdef _WIN32
   Sleep(ms);
 #else
@@ -130,7 +130,7 @@ void ULA_CALLTYPE ula_sleep_ms(uint32_t ms) {
 #endif
 }
 
-bool ULA_CALLTYPE ula_data_out(ula_handle_t device, uint8_t *data, size_t len) {
+DllPublic bool ULA_CALLTYPE ula_data_out(ula_handle_t device, uint8_t *data, size_t len) {
   int ret =
       libusb_bulk_transfer(device->libusb_handle, device->bluk_out_endpoint,
                            data, (int)len, NULL, LIBUSB_TIMEOUT);
@@ -141,7 +141,7 @@ bool ULA_CALLTYPE ula_data_out(ula_handle_t device, uint8_t *data, size_t len) {
   return (ret < 0) ? false : true;
 }
 
-bool ULA_CALLTYPE ula_data_in(ula_handle_t device, uint8_t *data, size_t len,
+DllPublic bool ULA_CALLTYPE ula_data_in(ula_handle_t device, uint8_t *data, size_t len,
                               size_t *readsize) {
   int _readsize;
   int ret =
@@ -158,7 +158,7 @@ bool ULA_CALLTYPE ula_data_in(ula_handle_t device, uint8_t *data, size_t len,
 
 // ==========================================================================
 
-void ULA_CALLTYPE ula_enum_devices(ula_enum_devices_callback_t callback,
+DllPublic void ULA_CALLTYPE ula_enum_devices(ula_enum_devices_callback_t callback,
                                    void *userdata) {
   if (!check_libusb_init())
     return;
@@ -184,13 +184,13 @@ void ULA_CALLTYPE ula_enum_devices(ula_enum_devices_callback_t callback,
       status = libusb_get_string_descriptor_ascii(
           handle, desc.iManufacturer, manufacture, STRING_DESCRIPTOR_LEN);
       if (status < 0) {
-        strcpy(manufacture, "?");
+        strcpy_s(manufacture, sizeof(manufacture), "?");
       }
 
       status = libusb_get_string_descriptor_ascii(
           handle, desc.iProduct, product, STRING_DESCRIPTOR_LEN);
       if (status < 0) {
-        strcpy(product, "");
+          strcpy_s(product, sizeof(product), "");
       }
 
       char desc_text[128];
